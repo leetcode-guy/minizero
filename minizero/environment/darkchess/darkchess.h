@@ -43,7 +43,10 @@ public:
     inline int getPolicySize() const override { return kDarkChessActionSize; }
     inline int getDiscreteValueSize() const override { return kDarkChessDiscreteValueSize; }
     std::string toString() const override;
-    inline std::string name() const override { return kDarkChessName; };
+    inline std::string name() const override { return kDarkChessName; }
+
+    // special check
+    bool checkCannonCanEat(std::pair<int, int> move) const;
 
 protected:
     std::mt19937 random_;
@@ -65,13 +68,17 @@ protected:
     //      a  b  c  d
     // 位置以 bitwise 儲存，least significant bit 為 1
     // Ex: board[2] = 3 (00000000000000000000000000000101)_2 表示仕在 a1 與 c1
-    std::array<DarkChessBitboard, 16> board_;
+    std::array<DarkChessBitboard, 16> board_current_position_;
+    // 當前每個位置上的棋子
+    std::array<char, 32> board_current_chess_;
+    // 有棋子的位置
+    DarkChessBitboard occupied_position_;
 
     // GamePair 中分成 black, white，但暗棋的顏色是紅跟黑
     // 因此在此處定義 GamePair 的 black 為紅色，white 為黑色
 
-    // 有棋子的位置
-    DarkChessBitboard occupied_position_;
+    // 雙方每種棋子的剩餘數量
+    GamePair<std::array<int, 7>> chess_count_;
     // 雙方棋子在棋盤上的位置
     GamePair<DarkChessBitboard> chess_position_;
     // 雙方可吃子的走步
