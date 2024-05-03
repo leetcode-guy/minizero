@@ -77,6 +77,8 @@ std::string env_go_ko_rule = "positional";
 std::string env_gomoku_rule = "normal";
 bool env_hex_use_swap_rule = true;
 int env_rubiks_scramble_rotate = 5;
+int env_darkchess_long_catch = 3;
+int env_darkchess_no_eat_flip = 180;
 
 void setConfiguration(ConfigureLoader& cl)
 {

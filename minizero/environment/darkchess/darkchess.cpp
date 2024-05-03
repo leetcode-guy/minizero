@@ -81,4 +81,37 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
     return true; // 符合以上條件即為合法的 action
 }
 
+bool DarkChessEnv::isTerminal() const
+{
+    // 場上只剩一顆棋時結束
+    auto red = chess_count_.get(Player::kPlayer1);
+    auto black = chess_count_.get(Player::kPlayer2);
+    if (std::accumulate(red.begin(), red.end(), 0) + std::accumulate(black.begin(), black.end(), 0) == 1) { return true; }
+
+    // 超過一定步數無吃翻
+    if (continuous_move_count_ >= config::env_darkchess_no_eat_flip) { return true; }
+
+    // 長捉（4 步一循環）
+    if (continuous_move_count_ >= config::env_darkchess_long_catch * 4) {
+        int act_history_size = action_history_.size();
+        // 循環的 4 步
+        int act1 = action_history_[act_history_size - 1].getActionID();
+        int act2 = action_history_[act_history_size - 2].getActionID();
+        int act3 = action_history_[act_history_size - 3].getActionID();
+        int act4 = action_history_[act_history_size - 4].getActionID();
+
+        // 若沒有連續循環指定次數則長捉不成立
+        for (int i = 1; i < config::env_darkchess_long_catch; i++) {
+            if (action_history_[act_history_size - i * 4 - 1].getActionID() != act1 &&
+                action_history_[act_history_size - i * 4 - 2].getActionID() != act2 &&
+                action_history_[act_history_size - i * 4 - 3].getActionID() != act3 &&
+                action_history_[act_history_size - i * 4 - 4].getActionID() != act4) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 } // namespace minizero::env::darkchess

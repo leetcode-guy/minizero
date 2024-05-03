@@ -2,6 +2,7 @@
 #define DARKCHESS_H_
 
 #include "base_env.h"
+#include "configuration.h"
 #include "darkchess_unit.h"
 #include "random.h"
 #include <array>
@@ -85,9 +86,13 @@ protected:
     GamePair<std::vector<std::pair<int, int>>> eatable_position_;
     // 雙方可移動的走步
     GamePair<std::vector<std::pair<int, int>>> movable_position_;
+    // 紀錄執行過的 action
+    std::vector<DarkChessAction> action_history_;
     // 每種棋子剩餘的數量
     std::array<int, 14> piece_count_;
     Move last_move_;
+    // 當前連續移動的次數，吃子或翻棋會歸零
+    int continuous_move_count_;
 };
 
 } // namespace minizero::env::darkchess

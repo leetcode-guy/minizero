@@ -81,6 +81,8 @@ extern std::string env_go_ko_rule;
 extern std::string env_gomoku_rule;
 extern bool env_hex_use_swap_rule;
 extern int env_rubiks_scramble_rotate;
+extern int env_darkchess_long_catch;
+extern int env_darkchess_no_eat_flip;
 
 void setConfiguration(ConfigureLoader& cl);
 
