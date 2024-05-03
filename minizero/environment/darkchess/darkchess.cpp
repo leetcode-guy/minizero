@@ -93,19 +93,19 @@ bool DarkChessEnv::isTerminal() const
 
     // 長捉（4 步一循環）
     if (continuous_move_count_ >= config::env_darkchess_long_catch * 4) {
-        int act_history_size = action_history_.size();
+        int act_history_size = actions_.size();
         // 循環的 4 步
-        int act1 = action_history_[act_history_size - 1].getActionID();
-        int act2 = action_history_[act_history_size - 2].getActionID();
-        int act3 = action_history_[act_history_size - 3].getActionID();
-        int act4 = action_history_[act_history_size - 4].getActionID();
+        int act1 = actions_[act_history_size - 1].getActionID();
+        int act2 = actions_[act_history_size - 2].getActionID();
+        int act3 = actions_[act_history_size - 3].getActionID();
+        int act4 = actions_[act_history_size - 4].getActionID();
 
         // 若沒有連續循環指定次數則長捉不成立
         for (int i = 1; i < config::env_darkchess_long_catch; i++) {
-            if (action_history_[act_history_size - i * 4 - 1].getActionID() != act1 &&
-                action_history_[act_history_size - i * 4 - 2].getActionID() != act2 &&
-                action_history_[act_history_size - i * 4 - 3].getActionID() != act3 &&
-                action_history_[act_history_size - i * 4 - 4].getActionID() != act4) {
+            if (actions_[act_history_size - i * 4 - 1].getActionID() != act1 &&
+                actions_[act_history_size - i * 4 - 2].getActionID() != act2 &&
+                actions_[act_history_size - i * 4 - 3].getActionID() != act3 &&
+                actions_[act_history_size - i * 4 - 4].getActionID() != act4) {
                 return false;
             }
         }

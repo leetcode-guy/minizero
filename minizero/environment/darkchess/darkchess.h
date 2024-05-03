@@ -86,8 +86,6 @@ protected:
     GamePair<std::vector<std::pair<int, int>>> eatable_position_;
     // 雙方可移動的走步
     GamePair<std::vector<std::pair<int, int>>> movable_position_;
-    // 紀錄執行過的 action
-    std::vector<DarkChessAction> action_history_;
     // 每種棋子剩餘的數量
     std::array<int, 14> piece_count_;
     Move last_move_;
