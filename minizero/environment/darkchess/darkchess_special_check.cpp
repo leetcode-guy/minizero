@@ -20,4 +20,17 @@ bool DarkChessEnv::checkCannonCanEat(std::pair<int, int> move) const
     return (chess_cnt == 1);
 }
 
+int DarkChessEnv::getRandomChessId() const {
+    int rand_num = std::uniform_int_distribution<>{0, chess_count_[15] - 1}(random_);
+    int rand_chess_id = 0;
+    for (int i = 1; i <= 14; i++) {
+        rand_num -= chess_count_[i];
+        if (rand_num < 0) {
+            rand_chess_id = i;
+            break;
+        }
+    }
+    return rand_chess_id;
+}
+
 } // namespace minizero::env::darkchess

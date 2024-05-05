@@ -24,6 +24,36 @@ Player charToPlayer(char c)
     }
 }
 
+bool DarkChessEnv::act(const DarkChessAction& action)
+{
+    if (!isLegalAction(action)) { return false; }
+
+    const std::pair<int, int> move = kDarkChessActionMap[action.getActionID()];
+    const Player player = action.getPlayer();
+    const int src = move.first;
+    const int dst = move.second;
+
+    // environment status
+    turn_ = action.nextPlayer();
+    actions_.push_back(action);
+
+    if (src == dst) { // 翻棋
+        int chess_id = getRandomChessId();
+        chess_count_[15]--;
+        board_current_chess_[src] = kDarkChessChessName[chess_id - 1];
+    } else {
+        if (board_current_chess_[dst] != ' ') { // 吃子
+            // 取得 dst 棋子的 id
+            int chess_id = std::distance(kDarkChessChessName.begin(), std::find(kDarkChessChessName.begin(), kDarkChessChessName.end(), board_current_chess_[dst]));
+            chess_count_[chess_id + 1]--;
+        }
+        board_current_chess_[dst] = board_current_chess_[src];
+        board_current_chess_[src] = ' ';
+    }
+
+    return true;
+}
+
 std::vector<DarkChessAction> DarkChessEnv::getLegalActions() const
 {
     std::vector<DarkChessAction> actions;
@@ -84,9 +114,7 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
 bool DarkChessEnv::isTerminal() const
 {
     // 場上只剩一顆棋時結束
-    auto red = chess_count_.get(Player::kPlayer1);
-    auto black = chess_count_.get(Player::kPlayer2);
-    if (std::accumulate(red.begin(), red.end(), 0) + std::accumulate(black.begin(), black.end(), 0) == 1) { return true; }
+    if (std::accumulate(chess_count_.begin() + 1, chess_count_.end() - 1, 0) == 1) { return true; }
 
     // 超過一定步數無吃翻
     if (continuous_move_count_ >= config::env_darkchess_no_eat_flip) { return true; }

@@ -48,6 +48,7 @@ public:
 
     // special check
     bool checkCannonCanEat(std::pair<int, int> move) const;
+    int getRandomChessId() const;
 
 protected:
     std::mt19937 random_;
@@ -74,12 +75,12 @@ protected:
     std::array<char, 32> board_current_chess_;
     // 有棋子的位置
     DarkChessBitboard occupied_position_;
+    // 每種棋子剩餘的數量，順序與上面說明相同
+    std::array<int, 16> chess_count_;
 
     // GamePair 中分成 black, white，但暗棋的顏色是紅跟黑
     // 因此在此處定義 GamePair 的 black 為紅色，white 為黑色
 
-    // 雙方每種棋子的剩餘數量
-    GamePair<std::array<int, 7>> chess_count_;
     // 雙方棋子在棋盤上的位置
     GamePair<DarkChessBitboard> chess_position_;
     // 雙方可吃子的走步
@@ -88,7 +89,6 @@ protected:
     GamePair<std::vector<std::pair<int, int>>> movable_position_;
     // 每種棋子剩餘的數量
     std::array<int, 14> piece_count_;
-    Move last_move_;
     // 當前連續移動的次數，吃子或翻棋會歸零
     int continuous_move_count_;
 };
