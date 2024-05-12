@@ -47,6 +47,11 @@ bool DarkChessEnv::act(const DarkChessAction& action)
             // 取得 dst 棋子的 id
             int chess_id = std::distance(kDarkChessChessName.begin(), std::find(kDarkChessChessName.begin(), kDarkChessChessName.end(), board_current_chess_[dst]));
             chess_count_[chess_id + 1]--;
+
+            // 場上只剩一顆棋時當前玩家獲勝
+            if (std::accumulate(chess_count_.begin() + 1, chess_count_.end() - 1, 0) == 1) {
+                winner_ = player;
+            }
         }
         board_current_chess_[dst] = board_current_chess_[src];
         board_current_chess_[src] = '-';
@@ -114,8 +119,7 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
 
 bool DarkChessEnv::isTerminal() const
 {
-    // 場上只剩一顆棋時結束
-    if (std::accumulate(chess_count_.begin() + 1, chess_count_.end() - 1, 0) == 1) { return true; }
+    if (winner_ != Player::kPlayerNone) { return true; }
 
     // 超過一定步數無吃翻
     if (continuous_move_count_ >= config::env_darkchess_no_eat_flip) { return true; }

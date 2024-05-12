@@ -53,6 +53,7 @@ public:
 protected:
     std::mt19937 random_;
     int seed_;
+    Player winner_;
 
     // 使用 Bitboard 儲存每種棋子在棋盤上的位置
     // 0: 空格 (-)，1 ~ 7: 帥 (K)、仕 (G)、相 (M)、俥 (R)、傌 (N)、炮 (C)、兵 (P)
