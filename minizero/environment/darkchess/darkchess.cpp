@@ -1,4 +1,5 @@
 #include "darkchess.h"
+#include <iostream>
 
 namespace minizero::env::darkchess {
 
@@ -42,13 +43,13 @@ bool DarkChessEnv::act(const DarkChessAction& action)
         chess_count_[15]--;
         board_current_chess_[src] = kDarkChessChessName[chess_id - 1];
     } else {
-        if (board_current_chess_[dst] != ' ') { // 吃子
+        if (board_current_chess_[dst] != '-') { // 吃子
             // 取得 dst 棋子的 id
             int chess_id = std::distance(kDarkChessChessName.begin(), std::find(kDarkChessChessName.begin(), kDarkChessChessName.end(), board_current_chess_[dst]));
             chess_count_[chess_id + 1]--;
         }
         board_current_chess_[dst] = board_current_chess_[src];
-        board_current_chess_[src] = ' ';
+        board_current_chess_[src] = '-';
     }
 
     return true;
@@ -76,7 +77,7 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
     if (move.first != move.second) {                     // 移動或吃子
         if (action.getPlayer() != Player::kPlayerNone) { // 雙方顏色未知時只能翻棋
             return false;
-        } else if (src == 'X' || src == ' ' || dst == 'X') { // 起點/終點不能是暗子且起點不能是空棋
+        } else if (src == 'X' || src == '-' || dst == 'X') { // 起點/終點不能是暗子且起點不能是空棋
             return false;
         } else if (action.getPlayer() != Player::kPlayer1) { // 紅棋
             // 起點需為紅棋（大寫字母），終點需為黑棋（小寫字母）
