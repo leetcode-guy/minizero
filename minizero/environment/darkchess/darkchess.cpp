@@ -147,4 +147,44 @@ bool DarkChessEnv::isTerminal() const
     return false;
 }
 
+float DarkChessEnv::getEvalScore(bool is_resign = false) const
+{
+    // 若認負則另一位玩家獲勝
+    Player eval = (is_resign ? getNextPlayer(turn_, kDarkChessNumPlayer) : winner_);
+    switch (eval) {
+        case Player::kPlayer1: return 1.0f;
+        case Player::kPlayer2: return -1.0f;
+        default: return 0.0f; // 平局
+    }
+}
+
+std::vector<float> DarkChessEnv::getFeatures(utils::Rotation rotation = utils::Rotation::kRotationNone) const
+{
+    // 16 features:
+    // 1 ~ 14: 各個棋子的位置
+    // 15: 暗子
+    // 16: 空格
+    std::vector<float> vFeatures;
+    for (int channel = 0; channel < 18; ++channel) {
+        for (int pos = 0; pos < kDarkChessBoardLength * kDarkChessBoardWidth; ++pos) {
+            if (channel < 14) {
+                vFeatures.push_back(board_current_chess_[pos] == kDarkChessChessName[channel] ? 1.0f : 0.0f);
+            } else if (channel == 14) {
+                vFeatures.push_back(board_current_chess_[pos] == 'X' ? 1.0f : 0.0f);
+            } else if (channel == 15) {
+                vFeatures.push_back(board_current_chess_[pos] == '-' ? 1.0f : 0.0f);
+            }
+        }
+    }
+    return vFeatures;
+}
+
+std::vector<float> DarkChessEnv::getActionFeatures(const DarkChessAction& action, utils::Rotation rotation = utils::Rotation::kRotationNone) const
+{
+    // TODO 可能需要改進
+    std::vector<float> action_features(kDarkChessActionSize, 0.0f);
+    action_features[action.getActionID()] = 1.0f;
+    return action_features;
+}
+
 } // namespace minizero::env::darkchess
