@@ -34,6 +34,7 @@ DarkChessEnv& DarkChessEnv::operator=(const DarkChessEnv& env)
     chess_count_ = env.chess_count_;
     piece_count_ = env.piece_count_;
     continuous_move_count_ = env.continuous_move_count_;
+    return *this;
 }
 
 void DarkChessEnv::reset(int seed)
