@@ -25,6 +25,33 @@ Player charToPlayer(char c)
     }
 }
 
+DarkChessEnv& DarkChessEnv::operator=(const DarkChessEnv& env)
+{
+    turn_ = env.turn_;
+    random_.seed(seed_ = env.seed_);
+    winner_ = env.winner_;
+    board_current_chess_ = env.board_current_chess_;
+    chess_count_ = env.chess_count_;
+    piece_count_ = env.piece_count_;
+    continuous_move_count_ = env.continuous_move_count_;
+}
+
+void DarkChessEnv::reset(int seed)
+{
+    turn_ = Player::kPlayer1;
+    random_.seed(seed_ = seed);
+    winner_ = Player::kPlayerNone;
+    board_current_chess_.fill('X');
+    chess_count_.fill(0);
+    chess_count_[15] = 32;
+    piece_count_.fill(2);
+    piece_count_[0] = 1;  // 帥
+    piece_count_[6] = 5;  // 兵
+    piece_count_[7] = 1;  // 將
+    piece_count_[13] = 5; // 卒
+    continuous_move_count_ = 0;
+}
+
 bool DarkChessEnv::act(const DarkChessAction& action)
 {
     if (!isLegalAction(action)) { return false; }
