@@ -175,7 +175,7 @@ bool DarkChessEnv::isTerminal() const
     return false;
 }
 
-float DarkChessEnv::getEvalScore(bool is_resign = false) const
+float DarkChessEnv::getEvalScore(bool is_resign) const
 {
     // 若認負則另一位玩家獲勝
     Player eval = (is_resign ? getNextPlayer(turn_, kDarkChessNumPlayer) : winner_);
@@ -186,7 +186,7 @@ float DarkChessEnv::getEvalScore(bool is_resign = false) const
     }
 }
 
-std::vector<float> DarkChessEnv::getFeatures(utils::Rotation rotation = utils::Rotation::kRotationNone) const
+std::vector<float> DarkChessEnv::getFeatures(utils::Rotation rotation) const
 {
     // 16 features:
     // 1 ~ 14: 各個棋子的位置
@@ -207,7 +207,7 @@ std::vector<float> DarkChessEnv::getFeatures(utils::Rotation rotation = utils::R
     return vFeatures;
 }
 
-std::vector<float> DarkChessEnv::getActionFeatures(const DarkChessAction& action, utils::Rotation rotation = utils::Rotation::kRotationNone) const
+std::vector<float> DarkChessEnv::getActionFeatures(const DarkChessAction& action, utils::Rotation rotation) const
 {
     // TODO 可能需要改進
     std::vector<float> action_features(kDarkChessActionSize, 0.0f);
