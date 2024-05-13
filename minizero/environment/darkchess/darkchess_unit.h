@@ -14,11 +14,7 @@ using Move = std::vector<int>; // {src, dst, src_chess, dst_chess}
 const std::string kDarkChessName = "darkchess";
 const int kDarkChessNumPlayer = 2;
 const int kDarkChessActionSize = 352;
-// TODO discrete value 應該是用於 reward transformation
-// 601 的數字出現於 MuZero 的論文 https://arxiv.org/pdf/1911.08265.pdf
-// 由於尚不清楚暗棋該用何值，暫時使用與其他 board game 相同的 1
-const int kDarkChessDiscreteValueSize = 1;
-const int kDarkChessBoardLength = 8;
+const int kDarkChessBoardHeight = 8;
 const int kDarkChessBoardWidth = 4;
 
 const std::array<char, 14> kDarkChessChessName = {

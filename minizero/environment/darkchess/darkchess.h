@@ -43,10 +43,18 @@ public:
     std::vector<float> getFeatures(utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
     std::vector<float> getActionFeatures(const DarkChessAction& action, utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
     inline int getNumInputChannels() const override { return 18; } // TODO input channel?
+    inline int getNumActionFeatureChannels() const override { return 1; }
+    inline int getInputChannelHeight() const override { return kDarkChessBoardHeight; }
+    inline int getInputChannelWidth() const override { return kDarkChessBoardWidth; }
+    inline int getHiddenChannelHeight() const override { return kDarkChessBoardHeight; }
+    inline int getHiddenChannelWidth() const override { return kDarkChessBoardWidth; }
+    inline int getDiscreteValueSize() const override { return 1; }
     inline int getPolicySize() const override { return kDarkChessActionSize; }
-    inline int getDiscreteValueSize() const override { return kDarkChessDiscreteValueSize; }
     std::string toString() const override;
     inline std::string name() const override { return kDarkChessName; }
+    inline int getNumPlayer() const override { return kDarkChessNumPlayer; }
+    inline int getRotatePosition(int position, utils::Rotation rotation) const override { return position; }
+    inline int getRotateAction(int action_id, utils::Rotation rotation) const override { return action_id; }
 
     // special check
     bool checkCannonCanEat(std::pair<int, int> move) const;

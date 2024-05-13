@@ -196,7 +196,7 @@ std::vector<float> DarkChessEnv::getFeatures(utils::Rotation rotation) const
     // 16: 空格
     std::vector<float> vFeatures;
     for (int channel = 0; channel < 18; ++channel) {
-        for (int pos = 0; pos < kDarkChessBoardLength * kDarkChessBoardWidth; ++pos) {
+        for (int pos = 0; pos < kDarkChessBoardHeight * kDarkChessBoardWidth; ++pos) {
             if (channel < 14) {
                 vFeatures.push_back(board_current_chess_[pos] == kDarkChessChessName[channel] ? 1.0f : 0.0f);
             } else if (channel == 14) {
