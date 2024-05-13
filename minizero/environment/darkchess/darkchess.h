@@ -1,11 +1,13 @@
-#ifndef DARKCHESS_H_
-#define DARKCHESS_H_
+#ifndef MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_H_
+#define MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_H_
 
 #include "base_env.h"
 #include "configuration.h"
 #include "darkchess_unit.h"
 #include "random.h"
 #include <array>
+#include <string>
+#include <utility>
 #include <vector>
 
 namespace minizero::env::darkchess {
@@ -111,4 +113,4 @@ public:
 
 } // namespace minizero::env::darkchess
 
-#endif
+#endif // MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_H_

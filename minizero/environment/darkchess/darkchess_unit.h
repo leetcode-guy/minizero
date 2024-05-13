@@ -1,13 +1,14 @@
-#ifndef DARKCHESS_UNIT_H_
-#define DARKCHESS_UNIT_H_
+#ifndef MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_UNIT_H_
+#define MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_UNIT_H_
 
 #include <map>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace minizero::env::darkchess {
 
-using DarkChessBitboard = unsigned long long;
+using DarkChessBitboard = uint64_t;
 using Move = std::vector<int>; // {src, dst, src_chess, dst_chess}
 
 const std::string kDarkChessName = "darkchess";
@@ -390,4 +391,4 @@ const std::map<char, int> kDarkChessValue = {
 
 } // namespace minizero::env::darkchess
 
-#endif
+#endif  // MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_UNIT_H_

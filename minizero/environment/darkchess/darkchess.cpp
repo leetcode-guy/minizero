@@ -1,5 +1,7 @@
 #include "darkchess.h"
 #include <iostream>
+#include <string>
+#include <utility>
 
 namespace minizero::env::darkchess {
 
