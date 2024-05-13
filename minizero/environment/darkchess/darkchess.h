@@ -48,7 +48,7 @@ public:
 
     // special check
     bool checkCannonCanEat(std::pair<int, int> move) const;
-    int getRandomChessId() const;
+    int getRandomChessId();
 
 protected:
     std::mt19937 random_;
@@ -92,6 +92,21 @@ protected:
     std::array<int, 14> piece_count_;
     // 當前連續移動的次數，吃子或翻棋會歸零
     int continuous_move_count_;
+};
+
+class DarkChessEnvLoader : public BaseEnvLoader<DarkChessAction, DarkChessEnv> {
+public:
+    void reset() override;
+    bool loadFromString(const std::string& content) override;
+    void loadFromEnvironment(const DarkChessEnv& env, const std::vector<std::vector<std::pair<std::string, std::string>>>& action_info_history = {}) override;
+    std::vector<float> getFeatures(const int pos, utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
+    std::vector<float> getActionFeatures(const int pos, utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
+    inline std::vector<float> getValue(const int pos) const { return {getReturn()}; }
+
+    inline std::string name() const override { return kDarkChessName; }
+    inline int getPolicySize() const override { return kDarkChessActionSize; }
+    inline int getRotatePosition(int position, utils::Rotation rotation) const override { return position; }
+    inline int getRotateAction(int action_id, utils::Rotation rotation) const override { return action_id; }
 };
 
 } // namespace minizero::env::darkchess
