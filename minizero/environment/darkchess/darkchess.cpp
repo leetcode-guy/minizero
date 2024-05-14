@@ -27,7 +27,8 @@ Player charToPlayer(char c)
     }
 }
 
-std::string getDarkChessActionString(int action_id) {
+std::string getDarkChessActionString(int action_id)
+{
     return std::to_string((31 - action_id) % 4) + std::to_string((31 - action_id) / 4);
 }
 
