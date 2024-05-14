@@ -27,6 +27,10 @@ Player charToPlayer(char c)
     }
 }
 
+std::string getDarkChessActionString(int action_id) {
+    return std::to_string((31 - action_id) % 4) + std::to_string((31 - action_id) / 4);
+}
+
 DarkChessEnv& DarkChessEnv::operator=(const DarkChessEnv& env)
 {
     turn_ = env.turn_;
