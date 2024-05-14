@@ -20,6 +20,7 @@ class DarkChessAction : public BaseAction {
 public:
     DarkChessAction() : BaseAction() {}
     DarkChessAction(int action_id, Player player) : BaseAction(action_id, player) {}
+    DarkChessAction(const std::vector<std::string>& action_string_args) {}
 
     inline Player nextPlayer() const override { return getNextPlayer(player_, kDarkChessNumPlayer); }
     inline std::string toConsoleString() const override { return getDarkChessActionString(action_id_); }
@@ -34,7 +35,7 @@ public:
     void reset() override { reset(utils::Random::randInt()); }
     void reset(int seed);
     bool act(const DarkChessAction& action) override;
-    bool act(const std::vector<std::string>& action_string_args) override;
+    bool act(const std::vector<std::string>& action_string_args) override { return act(DarkChessAction(action_string_args)); };
     std::vector<DarkChessAction> getLegalActions() const override;
     bool isLegalAction(const DarkChessAction& action) const override;
     bool isTerminal() const override;
@@ -55,6 +56,7 @@ public:
     inline int getNumPlayer() const override { return kDarkChessNumPlayer; }
     inline int getRotatePosition(int position, utils::Rotation rotation) const override { return position; }
     inline int getRotateAction(int action_id, utils::Rotation rotation) const override { return action_id; }
+    inline int getSeed() const { return seed_; }
 
     // special check
     bool checkCannonCanEat(std::pair<int, int> move) const;
@@ -108,7 +110,12 @@ class DarkChessEnvLoader : public BaseEnvLoader<DarkChessAction, DarkChessEnv> {
 public:
     void reset() override;
     bool loadFromString(const std::string& content) override;
-    void loadFromEnvironment(const DarkChessEnv& env, const std::vector<std::vector<std::pair<std::string, std::string>>>& action_info_history = {}) override;
+    void loadFromEnvironment(const DarkChessEnv& env, const std::vector<std::vector<std::pair<std::string, std::string>>>& action_info_history = {}) override
+    {
+        BaseEnvLoader::loadFromEnvironment(env, action_info_history);
+        addTag("SD", std::to_string(env.getSeed()));
+        // TODO other tags?
+    }
     std::vector<float> getFeatures(const int pos, utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
     std::vector<float> getActionFeatures(const int pos, utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
     inline std::vector<float> getValue(const int pos) const { return {getReturn()}; }
