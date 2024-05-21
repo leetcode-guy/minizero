@@ -43,5 +43,5 @@ while :; do
 done
 
 container_argumenets=$(echo ${container_argumenets} | xargs)
-echo "$container_tool run ${container_argumenets} --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --network=host --ipc=host --rm -it ${container_volume} ${image_name}"
-$container_tool run ${container_argumenets} --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --network=host --ipc=host --rm -it ${container_volume} ${image_name}
+echo "$container_tool run ${container_argumenets} --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --network=host --ipc=host --rm --device nvidia.com/gpu=all -it ${container_volume} ${image_name}"
+$container_tool run ${container_argumenets} --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --network=host --ipc=host --rm --device nvidia.com/gpu=all -it ${container_volume} ${image_name}
