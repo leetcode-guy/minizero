@@ -235,4 +235,14 @@ std::string DarkChessEnv::toString() const
     return res;
 }
 
+std::vector<float> DarkChessEnvLoader::getActionFeatures(const int pos, utils::Rotation rotation) const
+{
+    // TODO what is action features?
+    const DarkChessAction& action = action_pairs_[pos].first;
+    std::vector<float> action_features(getPolicySize(), 0.0f);
+    int action_id = ((pos < static_cast<int>(action_pairs_.size())) ? getRotateAction(action.getActionID(), rotation) : utils::Random::randInt() % action_features.size());
+    action_features[action_id] = 1.0f;
+    return action_features;
+}
+
 } // namespace minizero::env::darkchess

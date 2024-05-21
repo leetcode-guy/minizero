@@ -108,15 +108,12 @@ protected:
 
 class DarkChessEnvLoader : public BaseEnvLoader<DarkChessAction, DarkChessEnv> {
 public:
-    void reset() override;
-    bool loadFromString(const std::string& content) override;
     void loadFromEnvironment(const DarkChessEnv& env, const std::vector<std::vector<std::pair<std::string, std::string>>>& action_info_history = {}) override
     {
         BaseEnvLoader::loadFromEnvironment(env, action_info_history);
         addTag("SD", std::to_string(env.getSeed()));
         // TODO other tags?
     }
-    std::vector<float> getFeatures(const int pos, utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
     std::vector<float> getActionFeatures(const int pos, utils::Rotation rotation = utils::Rotation::kRotationNone) const override;
     inline std::vector<float> getValue(const int pos) const { return {getReturn()}; }
 
