@@ -55,7 +55,7 @@ void DarkChessEnv::reset(int seed)
     chess_count_[6] = 5;   // 兵
     chess_count_[7] = 1;   // 將
     chess_count_[13] = 5;  // 卒
-    chess_count_[14] = 0;   // 空格
+    chess_count_[14] = 0;  // 空格
     chess_count_[15] = 32; // 暗子
     flipped_chess_count_.fill(2);
     flipped_chess_count_[0] = 1;  // 帥
@@ -142,7 +142,7 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
         } else if (src == 'X' || src == '-' || dst == 'X') { // 起點/終點不能是暗子且起點不能是空棋
             return false;
         } else if (dst == '-') {
-            return true; // 終點是空格可以直接移動
+            return true;                                     // 終點是空格可以直接移動
         } else if (action.getPlayer() == Player::kPlayer1) { // 紅棋
             // 起點需為紅棋（大寫字母），終點需為黑棋（小寫字母）
             if (src - 'A' >= 32 && dst - 'a' < 0) {
@@ -153,6 +153,8 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
                 return true; // 兵可以吃將
             } else if (src == 'C') {
                 return checkCannonCanEat(move); // 炮要特殊判定
+            } else if (!checkNeighboring(move.first, move.second)) {
+                return false;
             } else if (kDarkChessValue.at(src) < kDarkChessValue.at(dst)) {
                 return false;
             }
@@ -166,6 +168,8 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
                 return true; // 卒可以吃帥
             } else if (src == 'c') {
                 return checkCannonCanEat(move); // 炮要特殊判定
+            } else if (!checkNeighboring(move.first, move.second)) {
+                return false;
             } else if (kDarkChessValue.at(src) < kDarkChessValue.at(dst)) {
                 return false;
             }

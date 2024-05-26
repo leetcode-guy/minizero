@@ -60,6 +60,7 @@ public:
 
     // special check
     bool checkCannonCanEat(std::pair<int, int> move) const;
+    bool checkNeighboring(int src, int dst) const;
     int getRandomChessId();
 
 protected:
