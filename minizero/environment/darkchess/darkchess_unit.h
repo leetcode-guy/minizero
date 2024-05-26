@@ -190,6 +190,28 @@ const std::array<std::pair<int, int>, kDarkChessActionSize> kDarkChessActionMap 
     {17, 16},
     {17, 18},
     {17, 19},
+    {18, 18},
+    {18, 30},
+    {18, 26},
+    {18, 22},
+    {18, 14},
+    {18, 10},
+    {18, 6},
+    {18, 2},
+    {18, 16},
+    {18, 17},
+    {18, 19},
+    {19, 19},
+    {19, 31},
+    {19, 27},
+    {19, 23},
+    {19, 15},
+    {19, 11},
+    {19, 7},
+    {19, 3},
+    {19, 16},
+    {19, 17},
+    {19, 18},
     {12, 12},
     {12, 28},
     {12, 24},
@@ -387,4 +409,4 @@ const std::map<char, int> kDarkChessValue = {
 
 } // namespace minizero::env::darkchess
 
-#endif  // MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_UNIT_H_
+#endif // MINIZERO_ENVIRONMENT_DARKCHESS_DARKCHESS_UNIT_H_
