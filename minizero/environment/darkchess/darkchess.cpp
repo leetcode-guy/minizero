@@ -39,7 +39,7 @@ DarkChessEnv& DarkChessEnv::operator=(const DarkChessEnv& env)
     winner_ = env.winner_;
     board_current_chess_ = env.board_current_chess_;
     chess_count_ = env.chess_count_;
-    piece_count_ = env.piece_count_;
+    flipped_chess_count_ = env.flipped_chess_count_;
     continuous_move_count_ = env.continuous_move_count_;
     return *this;
 }
@@ -50,13 +50,18 @@ void DarkChessEnv::reset(int seed)
     random_.seed(seed_ = seed);
     winner_ = Player::kPlayerNone;
     board_current_chess_.fill('X');
-    chess_count_.fill(0);
-    chess_count_[15] = 32;
-    piece_count_.fill(2);
-    piece_count_[0] = 1;  // 帥
-    piece_count_[6] = 5;  // 兵
-    piece_count_[7] = 1;  // 將
-    piece_count_[13] = 5; // 卒
+    chess_count_.fill(2);
+    chess_count_[0] = 0;   // 空格
+    chess_count_[1] = 1;   // 帥
+    chess_count_[7] = 5;   // 兵
+    chess_count_[8] = 1;   // 將
+    chess_count_[14] = 5;  // 卒
+    chess_count_[15] = 32; // 暗子
+    flipped_chess_count_.fill(2);
+    flipped_chess_count_[0] = 1;  // 帥
+    flipped_chess_count_[6] = 5;  // 兵
+    flipped_chess_count_[7] = 1;  // 將
+    flipped_chess_count_[13] = 5; // 卒
     continuous_move_count_ = 0;
 }
 
@@ -73,10 +78,12 @@ bool DarkChessEnv::act(const DarkChessAction& action)
     turn_ = action.nextPlayer();
     actions_.push_back(action);
 
-    if (src == dst) { // 翻棋
-        int chess_id = getRandomChessId();
+    if (src == dst) {                      // 翻棋
+        int chess_id = getRandomChessId(); // 0 ~ 13
+
         chess_count_[15]--;
-        board_current_chess_[src] = kDarkChessChessName[chess_id - 1];
+        flipped_chess_count_[chess_id]--;
+        board_current_chess_[src] = kDarkChessChessName[chess_id];
     } else {
         if (board_current_chess_[dst] != '-') { // 吃子
             // 取得 dst 棋子的 id

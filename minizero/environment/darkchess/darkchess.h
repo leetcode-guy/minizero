@@ -90,6 +90,8 @@ protected:
     DarkChessBitboard occupied_position_;
     // 每種棋子剩餘的數量，順序與上面說明相同
     std::array<int, 16> chess_count_;
+    // 每種棋子蓋著的數量
+    std::array<int, 14> flipped_chess_count_;
 
     // GamePair 中分成 black, white，但暗棋的顏色是紅跟黑
     // 因此在此處定義 GamePair 的 black 為紅色，white 為黑色
@@ -100,8 +102,6 @@ protected:
     GamePair<std::vector<std::pair<int, int>>> eatable_position_;
     // 雙方可移動的走步
     GamePair<std::vector<std::pair<int, int>>> movable_position_;
-    // 每種棋子剩餘的數量
-    std::array<int, 14> piece_count_;
     // 當前連續移動的次數，吃子或翻棋會歸零
     int continuous_move_count_;
 };

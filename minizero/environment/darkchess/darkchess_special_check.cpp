@@ -23,8 +23,8 @@ bool DarkChessEnv::checkCannonCanEat(std::pair<int, int> move) const
 int DarkChessEnv::getRandomChessId() {
     int rand_num = std::uniform_int_distribution<int>{0, chess_count_[15] - 1}(random_);
     int rand_chess_id = 0;
-    for (int i = 1; i <= 14; i++) {
-        rand_num -= chess_count_[i];
+    for (int i = 0; i <= 13; i++) {
+        rand_num -= flipped_chess_count_[i];
         if (rand_num < 0) {
             rand_chess_id = i;
             break;
