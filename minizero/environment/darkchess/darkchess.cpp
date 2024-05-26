@@ -234,11 +234,11 @@ std::string DarkChessEnv::toString() const
     std::string res("");
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 4; j++) {
-            res += board_current_chess_[i * 4 + (3 - j)] + " ";
+            res += board_current_chess_[i * 4 + (3 - j)];
+            res += " ";
         }
         res += "\n";
     }
-    res += "\n----------\n";
     return res;
 }
 
