@@ -51,11 +51,11 @@ void DarkChessEnv::reset(int seed)
     winner_ = Player::kPlayerNone;
     board_current_chess_.fill('X');
     chess_count_.fill(2);
-    chess_count_[0] = 0;   // 空格
-    chess_count_[1] = 1;   // 帥
-    chess_count_[7] = 5;   // 兵
-    chess_count_[8] = 1;   // 將
-    chess_count_[14] = 5;  // 卒
+    chess_count_[0] = 1;   // 帥
+    chess_count_[6] = 5;   // 兵
+    chess_count_[7] = 1;   // 將
+    chess_count_[13] = 5;  // 卒
+    chess_count_[14] = 0;   // 空格
     chess_count_[15] = 32; // 暗子
     flipped_chess_count_.fill(2);
     flipped_chess_count_[0] = 1;  // 帥
@@ -96,10 +96,10 @@ bool DarkChessEnv::act(const DarkChessAction& action)
         if (board_current_chess_[dst] != '-') { // 吃子
             // 取得 dst 棋子的 id
             int chess_id = std::distance(kDarkChessChessName.begin(), std::find(kDarkChessChessName.begin(), kDarkChessChessName.end(), board_current_chess_[dst]));
-            chess_count_[chess_id + 1]--;
+            chess_count_[chess_id]--;
 
             // 場上只剩一顆棋時當前玩家獲勝
-            if (std::accumulate(chess_count_.begin() + 1, chess_count_.end() - 1, 0) == 1) {
+            if (std::accumulate(chess_count_.begin(), chess_count_.end() - 2, 0) == 1) {
                 winner_ = player;
             }
         } else {
