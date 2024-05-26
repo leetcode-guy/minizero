@@ -46,7 +46,7 @@ DarkChessEnv& DarkChessEnv::operator=(const DarkChessEnv& env)
 
 void DarkChessEnv::reset(int seed)
 {
-    turn_ = Player::kPlayer1;
+    turn_ = Player::kPlayerNone;
     random_.seed(seed_ = seed);
     winner_ = Player::kPlayerNone;
     board_current_chess_.fill('X');
@@ -81,6 +81,14 @@ bool DarkChessEnv::act(const DarkChessAction& action)
     if (src == dst) {                      // 翻棋
         int chess_id = getRandomChessId(); // 0 ~ 13
 
+        if (action.getPlayer() == Player::kPlayerNone) {
+            if (chess_id <= 6) {
+                turn_ = Player::kPlayer2; // 自己是紅棋，下一步換黑棋
+            } else if (chess_id >= 7) {
+                turn_ = Player::kPlayer1; // 自己是黑棋，下一步換紅棋
+            }
+        }
+
         chess_count_[15]--;
         flipped_chess_count_[chess_id]--;
         board_current_chess_[src] = kDarkChessChessName[chess_id];
@@ -94,9 +102,16 @@ bool DarkChessEnv::act(const DarkChessAction& action)
             if (std::accumulate(chess_count_.begin() + 1, chess_count_.end() - 1, 0) == 1) {
                 winner_ = player;
             }
+        } else {
+            continuous_move_count_++;
         }
         board_current_chess_[dst] = board_current_chess_[src];
         board_current_chess_[src] = '-';
+    }
+
+    if (getLegalActions().size() == 0) {
+        winner_ = getNextPlayer(turn_, 2); // 對手無步可走則己方獲勝
+        std::cout << toString();
     }
 
     return true;
@@ -122,11 +137,13 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
     char dst = board_current_chess_[move.second]; // 終點
 
     if (move.first != move.second) {                     // 移動或吃子
-        if (action.getPlayer() != Player::kPlayerNone) { // 雙方顏色未知時只能翻棋
+        if (action.getPlayer() == Player::kPlayerNone) { // 雙方顏色未知時只能翻棋
             return false;
         } else if (src == 'X' || src == '-' || dst == 'X') { // 起點/終點不能是暗子且起點不能是空棋
             return false;
-        } else if (action.getPlayer() != Player::kPlayer1) { // 紅棋
+        } else if (dst == '-') {
+            return true; // 終點是空格可以直接移動
+        } else if (action.getPlayer() == Player::kPlayer1) { // 紅棋
             // 起點需為紅棋（大寫字母），終點需為黑棋（小寫字母）
             if (src - 'A' >= 32 && dst - 'a' < 0) {
                 return false;
@@ -139,7 +156,7 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
             } else if (kDarkChessValue.at(src) < kDarkChessValue.at(dst)) {
                 return false;
             }
-        } else if (action.getPlayer() != Player::kPlayer2) { // 黑棋
+        } else if (action.getPlayer() == Player::kPlayer2) { // 黑棋
             // 起點需為黑棋，終點需為紅棋
             if (src - 'a' < 32 && dst - 'A' >= 32) {
                 return false;

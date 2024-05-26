@@ -9,11 +9,11 @@ bool DarkChessEnv::checkCannonCanEat(std::pair<int, int> move) const
     if (move.first < move.second) std::swap(move.first, move.second);
     if (move.first / 4 == move.second / 4) { // 兩顆棋在同一個 row
         for (int i = move.first; i < move.second; i++) {
-            if (board_current_chess_[i] != ' ') chess_cnt++;
+            if (board_current_chess_[i] != '-') chess_cnt++;
         }
     } else { // 兩顆棋在同一個 column
         for (int i = move.first; i < move.second; i += 4) {
-            if (board_current_chess_[i] != ' ') chess_cnt++;
+            if (board_current_chess_[i] != '-') chess_cnt++;
         }
     }
 
