@@ -92,6 +92,7 @@ bool DarkChessEnv::act(const DarkChessAction& action)
         chess_count_[15]--;
         flipped_chess_count_[chess_id]--;
         board_current_chess_[src] = kDarkChessChessName[chess_id];
+        continuous_move_count_ = 0;
     } else {
         if (board_current_chess_[dst] != '-') { // 吃子
             // 取得 dst 棋子的 id
@@ -102,6 +103,8 @@ bool DarkChessEnv::act(const DarkChessAction& action)
             if (std::accumulate(chess_count_.begin(), chess_count_.end() - 2, 0) == 1) {
                 winner_ = player;
             }
+
+            continuous_move_count_ = 0;
         } else {
             continuous_move_count_++;
         }
