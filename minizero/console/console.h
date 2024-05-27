@@ -60,11 +60,14 @@ protected:
     void cmdFinalScore(const std::vector<std::string>& args);
     void cmdPV(const std::vector<std::string>& args);
     void cmdLoadModel(const std::vector<std::string>& args);
+    void cmdPVString(const std::vector<std::string>& args);
+    void cmdGetConfigString(const std::vector<std::string>& args);
 
     virtual void calculatePolicyValue(std::vector<float>& policy, float& value, utils::Rotation rotation = utils::Rotation::kRotationNone);
     bool checkArgument(const std::vector<std::string>& args, int min_argc, int max_argc);
     void reply(ConsoleResponse response, const std::string& reply);
 
+    std::string command_id_;
     std::shared_ptr<minizero::network::Network> network_;
     std::shared_ptr<actor::BaseActor> actor_;
     std::map<std::string, std::shared_ptr<BaseFunction>> function_map_;

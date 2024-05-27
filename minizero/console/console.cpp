@@ -32,7 +32,9 @@ Console::Console()
     RegisterFunction("reg_genmove", this, &Console::cmdGenmove);
     RegisterFunction("final_score", this, &Console::cmdFinalScore);
     RegisterFunction("pv", this, &Console::cmdPV);
+    RegisterFunction("pv_string", this, &Console::cmdPVString);
     RegisterFunction("load_model", this, &Console::cmdLoadModel);
+    RegisterFunction("get_conf_str", this, &Console::cmdGetConfigString);
 }
 
 void Console::initialize()
@@ -74,6 +76,13 @@ void Console::executeCommand(std::string command)
     std::string tmp;
     std::vector<std::string> args;
     while (std::getline(ss, tmp, ' ')) { args.push_back(tmp); }
+
+    // save command id if first argument is a number
+    command_id_ = "";
+    if (!args[0].empty() && args[0].find_first_not_of("0123456789") == std::string::npos) {
+        command_id_ = args[0];
+        args.erase(args.begin());
+    }
 
     // execute function
     if (function_map_.count(args[0]) == 0) { return reply(ConsoleResponse::kFail, "Unknown command: " + command); }
@@ -205,6 +214,27 @@ void Console::cmdPV(const std::vector<std::string>& args)
     reply(ConsoleResponse::kSuccess, oss.str());
 }
 
+void Console::cmdPVString(const std::vector<std::string>& args)
+{
+    if (!checkArgument(args, 1, 1)) { return; }
+
+    float value;
+    std::vector<float> policy;
+    utils::Rotation rotation = config::actor_use_random_rotation_features ? static_cast<utils::Rotation>(utils::Random::randInt() % static_cast<int>(utils::Rotation::kRotateSize)) : utils::Rotation::kRotationNone;
+    calculatePolicyValue(policy, value, rotation);
+
+    std::ostringstream oss;
+    oss << std::endl;
+    oss << "[value] " << value << std::endl;
+    const Environment& env_transition = actor_->getEnvironment();
+    for (size_t action_id = 0; action_id < policy.size(); ++action_id) {
+        Action action(action_id, env_transition.getTurn());
+        if (!env_transition.isLegalAction(action)) { continue; }
+        oss << action.toConsoleString() << " " << std::to_string(policy[action_id] * 100).substr(0, 4) << " ";
+    }
+    reply(ConsoleResponse::kSuccess, oss.str());
+}
+
 void Console::cmdLoadModel(const std::vector<std::string>& args)
 {
     if (!checkArgument(args, 2, 2)) { return; }
@@ -212,6 +242,17 @@ void Console::cmdLoadModel(const std::vector<std::string>& args)
     network_ = nullptr;
     initialize();
     reply(ConsoleResponse::kSuccess, "");
+}
+
+void Console::cmdGetConfigString(const std::vector<std::string>& args)
+{
+    if (!checkArgument(args, 2, 2)) { return; }
+    std::ostringstream oss;
+    config::ConfigureLoader cl;
+    config::setConfiguration(cl);
+    oss << std::endl;
+    for (auto& conf_key : utils::stringToVector(args[1], ":")) { oss << cl.getConfig(conf_key); }
+    reply(ConsoleResponse::kSuccess, oss.str());
 }
 
 void Console::calculatePolicyValue(std::vector<float>& policy, float& value, utils::Rotation rotation /* = utils::Rotation::kRotationNone */)
@@ -258,7 +299,7 @@ bool Console::checkArgument(const std::vector<std::string>& args, int min_argc, 
 
 void Console::reply(ConsoleResponse response, const std::string& reply)
 {
-    std::cout << static_cast<char>(response) << " " << reply << "\n\n";
+    std::cout << static_cast<char>(response) << command_id_ << " " << reply << "\n\n";
 }
 
 } // namespace minizero::console
