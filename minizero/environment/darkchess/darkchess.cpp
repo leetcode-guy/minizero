@@ -37,6 +37,7 @@ DarkChessEnv& DarkChessEnv::operator=(const DarkChessEnv& env)
     turn_ = env.turn_;
     random_.seed(seed_ = env.seed_);
     winner_ = env.winner_;
+    actions_ = env.actions_;
     board_current_chess_ = env.board_current_chess_;
     chess_count_ = env.chess_count_;
     flipped_chess_count_ = env.flipped_chess_count_;
@@ -49,6 +50,7 @@ void DarkChessEnv::reset(int seed)
     turn_ = Player::kPlayerNone;
     random_.seed(seed_ = seed);
     winner_ = Player::kPlayerNone;
+    actions_.clear();
     board_current_chess_.fill('X');
     chess_count_.fill(2);
     chess_count_[0] = 1;   // 帥
