@@ -72,6 +72,8 @@ std::string nn_type_name = "alphazero";
 int env_board_size = 0;
 std::string env_atari_rom_dir = "/opt/atari57/";
 std::string env_atari_name = "ms_pacman";
+int env_darkchess_long_catch = 3;
+int env_darkchess_no_eat_flip = 180;
 float env_go_komi = 7.5;
 std::string env_go_ko_rule = "positional";
 bool env_killallgo_use_seki = false;
@@ -79,8 +81,6 @@ std::string env_gomoku_rule = "standard";
 bool env_gomoku_exactly_five_stones = true;
 bool env_hex_use_swap_rule = true;
 int env_rubiks_scramble_rotate = 5;
-int env_darkchess_long_catch = 3;
-int env_darkchess_no_eat_flip = 180;
 
 void setConfiguration(ConfigureLoader& cl)
 {
@@ -161,6 +161,9 @@ void setConfiguration(ConfigureLoader& cl)
                                                       "#\troad_runner robotank seaquest skiing solaris space_invaders star_gunner surround tennis time_pilot\n"
                                                       "#\ttutankham up_n_down venture video_pinball wizard_of_wor yars_revenge zaxxon",
                     "Environment");
+#elif DARKCHESS
+    cl.addParameter("env_darkchess_long_catch", env_darkchess_long_catch, "the limit of long catch in darkchess (4 moves as a cycle)", "Environment");
+    cl.addParameter("env_darkchess_no_eat_flip", env_darkchess_no_eat_flip, "the limit of continuous moves without eat or flip", "Environment");
 #elif GO
     cl.addParameter("env_go_komi", env_go_komi, "the komi in Go", "Environment");
     cl.addParameter("env_go_ko_rule", env_go_ko_rule, "the ko rules in Go: positional (only consider stones), situational (consider stones and the turn)", "Environment");
