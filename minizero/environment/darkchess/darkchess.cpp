@@ -146,7 +146,7 @@ bool DarkChessEnv::isLegalAction(const DarkChessAction& action) const
             return false;
         } else if (src == 'X' || src == '-' || dst == 'X') { // 起點/終點不能是暗子且起點不能是空棋
             return false;
-        } else if (dst == '-') {
+        } else if (dst == '-' && checkNeighboring(move.first, move.second)) {
             return true;                                     // 終點是空格可以直接移動
         } else if (action.getPlayer() == Player::kPlayer1) { // 紅棋
             // 起點需為紅棋（大寫字母），終點需為黑棋（小寫字母）
