@@ -19,21 +19,24 @@ Console::Console()
     : network_(nullptr),
       actor_(nullptr)
 {
-    RegisterFunction("gogui-analyze_commands", this, &Console::cmdGoguiAnalyzeCommands);
-    RegisterFunction("list_commands", this, &Console::cmdListCommands);
+    RegisterFunction("protocol_version", this, &Console::cmdProtocalVersion);
     RegisterFunction("name", this, &Console::cmdName);
     RegisterFunction("version", this, &Console::cmdVersion);
-    RegisterFunction("protocol_version", this, &Console::cmdProtocalVersion);
-    RegisterFunction("clear_board", this, &Console::cmdClearBoard);
-    RegisterFunction("showboard", this, &Console::cmdShowBoard);
-    RegisterFunction("play", this, &Console::cmdPlay);
+    // TODO known_commands
+    RegisterFunction("list_commands", this, &Console::cmdListCommands);
     RegisterFunction("boardsize", this, &Console::cmdBoardSize);
+    RegisterFunction("reset_board", this, &Console::cmdClearBoard);
+    RegisterFunction("play", this, &Console::cmdPlay);  // TODO 拆成 move/flip
     RegisterFunction("genmove", this, &Console::cmdGenmove);
-    RegisterFunction("reg_genmove", this, &Console::cmdGenmove);
+    // TODO ready
+    // TODO time_settings
+    // TODO time_left
+    // TODO init_board
     RegisterFunction("final_score", this, &Console::cmdFinalScore);
     RegisterFunction("pv", this, &Console::cmdPV);
     RegisterFunction("pv_string", this, &Console::cmdPVString);
     RegisterFunction("load_model", this, &Console::cmdLoadModel);
+    RegisterFunction("showboard", this, &Console::cmdShowBoard);
     RegisterFunction("get_conf_str", this, &Console::cmdGetConfigString);
 }
 
@@ -107,7 +110,7 @@ void Console::cmdListCommands(const std::vector<std::string>& args)
 void Console::cmdName(const std::vector<std::string>& args)
 {
     if (!checkArgument(args, 1, 1)) { return; }
-    reply(ConsoleResponse::kSuccess, "minizero");
+    reply(ConsoleResponse::kSuccess, "minizero_darkchess");
 }
 
 void Console::cmdVersion(const std::vector<std::string>& args)
@@ -119,7 +122,7 @@ void Console::cmdVersion(const std::vector<std::string>& args)
 void Console::cmdProtocalVersion(const std::vector<std::string>& args)
 {
     if (!checkArgument(args, 1, 1)) { return; }
-    reply(ConsoleResponse::kSuccess, "2");
+    reply(ConsoleResponse::kSuccess, "1.0.0");
 }
 
 void Console::cmdClearBoard(const std::vector<std::string>& args)
