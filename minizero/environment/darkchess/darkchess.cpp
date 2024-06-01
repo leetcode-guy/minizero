@@ -29,7 +29,15 @@ Player charToPlayer(char c)
 
 std::string getDarkChessActionString(int action_id)
 {
-    return std::to_string((31 - action_id) % 4) + std::to_string((31 - action_id) / 4);
+    auto move = kDarkChessActionMap[action_id];
+    int src_x = 3 - (move.first % 4);
+    int src_y = 8 - (move.first / 4);
+    int dst_x = 3 - (move.second % 4);
+    int dst_y = 8 - (move.second / 4);
+
+    std::string action_str;
+    action_str = action_str + static_cast<char>('a' + src_x) + std::to_string(src_y) + ' ' + static_cast<char>('a' + dst_x) + std::to_string(dst_y);
+    return action_str;
 }
 
 DarkChessEnv& DarkChessEnv::operator=(const DarkChessEnv& env)
