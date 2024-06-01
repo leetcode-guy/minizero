@@ -14,6 +14,7 @@ namespace minizero::env::darkchess {
 
 char playerToChar(Player p);
 Player charToPlayer(char c);
+int coordToIndex(std::string coord);
 std::string getDarkChessActionString(int action_id);
 
 class DarkChessAction : public BaseAction {
