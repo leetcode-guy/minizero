@@ -27,6 +27,12 @@ Player charToPlayer(char c)
     }
 }
 
+int coordToIndex(std::string coord)
+{
+    assert(coord.size() == 2);
+    return (3 - (coord[0] - 'a')) + (7 - (coord[1] - '1')) * 4;
+}
+
 std::string getDarkChessActionString(int action_id)
 {
     auto move = kDarkChessActionMap[action_id];

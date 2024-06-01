@@ -20,7 +20,20 @@ class DarkChessAction : public BaseAction {
 public:
     DarkChessAction() : BaseAction() {}
     DarkChessAction(int action_id, Player player) : BaseAction(action_id, player) {}
-    DarkChessAction(const std::vector<std::string>& action_string_args) {}
+    DarkChessAction(const std::vector<std::string>& action_string_args)
+    {
+        // [player] [src] [dst]
+        assert(action_string_args.size() == 3);
+        assert(action_string_args[0].size() == 1);
+        player_ = charToPlayer(action_string_args[0][0]);
+        assert(static_cast<int>(player_) > 0 && static_cast<int>(player_) <= kDarkChessNumPlayer);
+        action_id_ = -1;
+
+        int src = coordToIndex(action_string_args[1]);
+        int dst = coordToIndex(action_string_args[2]);
+        std::pair<int, int> move = {src, dst};
+        action_id_ = std::distance(kDarkChessActionMap.begin(), std::find(kDarkChessActionMap.begin(), kDarkChessActionMap.end(), move));
+    }
 
     inline Player nextPlayer() const override { return getNextPlayer(player_, kDarkChessNumPlayer); }
     inline std::string toConsoleString() const override { return getDarkChessActionString(action_id_); }
