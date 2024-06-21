@@ -217,9 +217,9 @@ bool DarkChessEnv::isTerminal() const
 
         // 若沒有連續循環指定次數則長捉不成立
         for (int i = 1; i < config::env_darkchess_long_catch; i++) {
-            if (actions_[act_history_size - i * 4 - 1].getActionID() != act1 &&
-                actions_[act_history_size - i * 4 - 2].getActionID() != act2 &&
-                actions_[act_history_size - i * 4 - 3].getActionID() != act3 &&
+            if (actions_[act_history_size - i * 4 - 1].getActionID() != act1 ||
+                actions_[act_history_size - i * 4 - 2].getActionID() != act2 ||
+                actions_[act_history_size - i * 4 - 3].getActionID() != act3 ||
                 actions_[act_history_size - i * 4 - 4].getActionID() != act4) {
                 return false;
             }
