@@ -39,6 +39,17 @@ bool BaseActor::act(const std::vector<std::string>& action_string_args)
     return can_act;
 }
 
+// BUG: 編譯可能會有問題
+bool BaseActor::flip(std::string_view src, std::string_view chess)
+{
+    bool can_flip = env_.flip(src, chess);
+    if (can_flip) {
+        action_info_history_.resize(env_.getActionHistory().size());
+        action_info_history_.back() = getActionInfo();
+    }
+    return can_flip;
+}
+
 std::string BaseActor::getRecord(const std::unordered_map<std::string, std::string>& tags /* = {} */) const
 {
     EnvironmentLoader env_loader;

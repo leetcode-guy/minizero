@@ -22,6 +22,7 @@ public:
     virtual void resetSearch();
     bool act(const Action& action);
     bool act(const std::vector<std::string>& action_string_args);
+    bool flip(std::string_view src, std::string_view chess);
     virtual std::string getRecord(const std::unordered_map<std::string, std::string>& tags = {}) const;
 
     inline bool isEnvTerminal() const { return env_.isTerminal(); }

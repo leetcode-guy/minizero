@@ -22,15 +22,18 @@ Console::Console()
     RegisterFunction("protocol_version", this, &Console::cmdProtocalVersion);
     RegisterFunction("name", this, &Console::cmdName);
     RegisterFunction("version", this, &Console::cmdVersion);
-    // TODO known_commands
+    RegisterFunction("known_commands", this, &Console::cmdKnownCommands);
     RegisterFunction("list_commands", this, &Console::cmdListCommands);
     RegisterFunction("boardsize", this, &Console::cmdBoardSize);
     RegisterFunction("reset_board", this, &Console::cmdClearBoard);
-    RegisterFunction("play", this, &Console::cmdPlay);  // TODO 拆成 move/flip
+    RegisterFunction("play", this, &Console::cmdPlay); // TODO 拆成 move/flip
     RegisterFunction("genmove", this, &Console::cmdGenmove);
-    // TODO ready
+    RegisterFunction("ready", this, &Console::cmdReady);
+    RegisterFunction("time_settings", this, &Console::cmdTimeSettings);
     // TODO time_settings
+    RegisterFunction("time_left", this, &Console::cmdTimeLeft);
     // TODO time_left
+    RegisterFunction("init_board", this, &Console::cmdInitBoard);
     // TODO init_board
     RegisterFunction("final_score", this, &Console::cmdFinalScore);
     RegisterFunction("pv", this, &Console::cmdPV);
@@ -38,6 +41,21 @@ Console::Console()
     RegisterFunction("load_model", this, &Console::cmdLoadModel);
     RegisterFunction("showboard", this, &Console::cmdShowBoard);
     RegisterFunction("get_conf_str", this, &Console::cmdGetConfigString);
+
+    command_list_ = {
+        "protocol_version",
+        "name",
+        "version",
+        "known_commands",
+        "quit",
+        "reset_board",
+        "move",
+        "flip",
+        "genmove",
+        "ready",
+        "time_settings",
+        "init_board",
+    };
 }
 
 void Console::initialize()
@@ -125,6 +143,17 @@ void Console::cmdProtocalVersion(const std::vector<std::string>& args)
     reply(ConsoleResponse::kSuccess, "1.0.0");
 }
 
+void Console::cmdKnownCommands(const std::vector<std::string>& args)
+{
+    if (!checkArgument(args, 2, 2)) { return; }
+    // check if support this command
+    if (std::find(command_list_.begin(), command_list_.end(), args[1]) != command_list_.end()) {
+        reply(ConsoleResponse::kSuccess, "true");
+    } else {
+        reply(ConsoleResponse::kSuccess, "false");
+    }
+}
+
 void Console::cmdClearBoard(const std::vector<std::string>& args)
 {
     if (!checkArgument(args, 1, 1)) { return; }
@@ -145,6 +174,22 @@ void Console::cmdPlay(const std::vector<std::string>& args)
     std::vector<std::string> act_args;
     for (unsigned int i = 1; i < args.size(); i++) { act_args.push_back(args[i]); }
     if (!actor_->act(act_args) && !actor_->isEnvTerminal()) { return reply(ConsoleResponse::kFail, "Invalid action: \"" + action_string + "\""); }
+    reply(ConsoleResponse::kSuccess, "");
+}
+
+void Console::cmdMove(const std::vector<std::string>& args)
+{
+    if (!checkArgument(args, 3, 3)) { return; }
+    std::vector<std::string> act_args;
+    for (unsigned int i = 1; i < args.size(); i++) { act_args.push_back(args[i]); }
+    if (!actor_->act(act_args) && !actor_->isEnvTerminal()) { return reply(ConsoleResponse::kFail, "Invalid move: \"" + args[1] + "-" + args[2] + "\""); }
+    reply(ConsoleResponse::kSuccess, "");
+}
+
+void Console::cmdFlip(const std::vector<std::string>& args)
+{
+    if (!checkArgument(args, 3, 3)) { return; }
+    if (!actor_->flip(args[1], args[2])) { return reply(ConsoleResponse::kFail, "Invalid flip: \"" + args[1] + "(" + args[2] + ")" + "\""); }
     reply(ConsoleResponse::kSuccess, "");
 }
 
@@ -169,6 +214,18 @@ void Console::cmdGenmove(const std::vector<std::string>& args)
 
     reply(ConsoleResponse::kSuccess, action.toConsoleString());
 }
+
+void Console::cmdReady(const std::vector<std::string>& args)
+{
+    if (!checkArgument(args, 1, 1)) { return; }
+    reply(ConsoleResponse::kSuccess, "");
+}
+
+void Console::cmdTimeSettings(const std::vector<std::string>& args) {}
+
+void Console::cmdTimeLeft(const std::vector<std::string>& args) {}
+
+void Console::cmdInitBoard(const std::vector<std::string>& args) {}
 
 void Console::cmdFinalScore(const std::vector<std::string>& args)
 {

@@ -7,6 +7,7 @@
 #include "random.h"
 #include <array>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -21,20 +22,7 @@ class DarkChessAction : public BaseAction {
 public:
     DarkChessAction() : BaseAction() {}
     DarkChessAction(int action_id, Player player) : BaseAction(action_id, player) {}
-    DarkChessAction(const std::vector<std::string>& action_string_args)
-    {
-        // [player] [src] [dst]
-        assert(action_string_args.size() == 3);
-        assert(action_string_args[0].size() == 1);
-        player_ = charToPlayer(action_string_args[0][0]);
-        assert(static_cast<int>(player_) > 0 && static_cast<int>(player_) <= kDarkChessNumPlayer);
-        action_id_ = -1;
-
-        int src = coordToIndex(action_string_args[1]);
-        int dst = coordToIndex(action_string_args[2]);
-        std::pair<int, int> move = {src, dst};
-        action_id_ = std::distance(kDarkChessActionMap.begin(), std::find(kDarkChessActionMap.begin(), kDarkChessActionMap.end(), move));
-    }
+    DarkChessAction(const std::vector<std::string>& action_string_args) {}
 
     inline Player nextPlayer() const override { return getNextPlayer(player_, kDarkChessNumPlayer); }
     inline std::string toConsoleString() const override { return getDarkChessActionString(action_id_); }
@@ -49,7 +37,25 @@ public:
     void reset() override { reset(utils::Random::randInt()); }
     void reset(int seed);
     bool act(const DarkChessAction& action) override;
-    bool act(const std::vector<std::string>& action_string_args) override { return act(DarkChessAction(action_string_args)); };
+    bool act(const std::vector<std::string>& action_string_args) override
+    {
+        // [src] [dst]
+        assert(action_string_args.size() == 2);
+        int action_id_ = -1;
+        Player player_;
+
+        int src = coordToIndex(action_string_args[0]);
+        int dst = coordToIndex(action_string_args[1]);
+        std::pair<int, int> move = {src, dst};
+        action_id_ = std::distance(kDarkChessActionMap.begin(), std::find(kDarkChessActionMap.begin(), kDarkChessActionMap.end(), move));
+        if (isupper(board_current_chess_[src])) {
+            player_ = Player::kPlayer1;
+        } else {
+            player_ = Player::kPlayer2;
+        }
+        return act(DarkChessAction(action_id_, player_));
+    };
+    bool flip(std::string_view src, std::string_view chess) {}
     std::vector<DarkChessAction> getLegalActions() const override;
     bool isLegalAction(const DarkChessAction& action) const override;
     bool isTerminal() const override;

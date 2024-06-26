@@ -52,11 +52,18 @@ protected:
     void cmdName(const std::vector<std::string>& args);
     void cmdVersion(const std::vector<std::string>& args);
     void cmdProtocalVersion(const std::vector<std::string>& args);
+    void cmdKnownCommands(const std::vector<std::string>& args);
     void cmdClearBoard(const std::vector<std::string>& args);
     void cmdShowBoard(const std::vector<std::string>& args);
     void cmdPlay(const std::vector<std::string>& args);
+    void cmdMove(const std::vector<std::string>& args);
+    void cmdFlip(const std::vector<std::string>& args);
     void cmdBoardSize(const std::vector<std::string>& args);
     void cmdGenmove(const std::vector<std::string>& args);
+    void cmdReady(const std::vector<std::string>& args);
+    void cmdTimeSettings(const std::vector<std::string>& args);
+    void cmdTimeLeft(const std::vector<std::string>& args);
+    void cmdInitBoard(const std::vector<std::string>& args);
     void cmdFinalScore(const std::vector<std::string>& args);
     void cmdPV(const std::vector<std::string>& args);
     void cmdPVString(const std::vector<std::string>& args);
@@ -71,6 +78,7 @@ protected:
     std::shared_ptr<minizero::network::Network> network_;
     std::shared_ptr<actor::BaseActor> actor_;
     std::map<std::string, std::shared_ptr<BaseFunction>> function_map_;
+    std::vector<std::string> command_list_;
 };
 
 } // namespace minizero::console

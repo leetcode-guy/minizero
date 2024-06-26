@@ -27,7 +27,7 @@ Player charToPlayer(char c)
     }
 }
 
-int coordToIndex(std::string coord)
+int coordToIndex(std::string_view coord)
 {
     assert(coord.size() == 2);
     return (3 - (coord[0] - 'a')) + (7 - (coord[1] - '1')) * 4;
@@ -133,6 +133,26 @@ bool DarkChessEnv::act(const DarkChessAction& action)
         std::cout << toString();
     }
 
+    return true;
+}
+
+bool DarkChessEnv::flip(std::string_view src, std::string_view chess)
+{
+    if (chess.size() != 1) return false;
+
+    int src_index = coordToIndex(src);
+    if (board_current_chess_[src_index] != 'X') return false;
+
+    // add to action history
+    std::pair<int, int> move = {src_index, src_index};
+    int action_id_ = std::distance(kDarkChessActionMap.begin(), std::find(kDarkChessActionMap.begin(), kDarkChessActionMap.end(), move));
+    actions_.push_back(DarkChessAction(action_id_, turn_));
+    turn_ = getNextPlayer(turn_, kDarkChessNumPlayer);
+
+    int chess_id = std::distance(kDarkChessChessName.begin(), std::find(kDarkChessChessName.begin(), kDarkChessChessName.end(), src));
+    board_current_chess_[src_index] = chess[0];
+    chess_count_[15]--;
+    flipped_chess_count_[chess_id]--;
     return true;
 }
 
